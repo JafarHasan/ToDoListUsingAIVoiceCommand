@@ -20,8 +20,13 @@ public class TaskService {
         this.taskRepository=taskRepository;
     }
 
-    public Task addTask(Task task){
-        return taskRepository.save(task);
+    public Task addTask(String operation, String task, String urgency, String datetime) {
+        Task newTask = new Task();
+        newTask.setOperation(operation);
+        newTask.setTask(task);
+        newTask.setUrgency(urgency);
+        newTask.setDateTime(datetime);
+        return taskRepository.save(newTask);
     }
 
     public Task getTaskById(Long taskId) {
@@ -33,16 +38,16 @@ public class TaskService {
         return task;
     }
 
-    public Task updateTaskById(Long id, Task task) {
+    public Task updateTaskById(Long id, String operation, String task, String urgency, String datetime) {
         Optional<Task> optionalTask=taskRepository.findById(id);
         if(optionalTask.isEmpty()){
             throw new RuntimeException("Task Not Found With given ID");
         }
         Task existingTask=optionalTask.get();
-        //map with new task(updated)
-        existingTask.setTaskId(task.getTaskId());
-
-        //save it to DB
+        existingTask.setOperation(operation);
+        existingTask.setTask(task);
+        existingTask.setUrgency(urgency);
+        existingTask.setDateTime(datetime);
         return taskRepository.save(existingTask);
     }
 

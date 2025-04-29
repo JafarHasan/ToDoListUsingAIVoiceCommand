@@ -64,13 +64,13 @@ public class MyAnalyzer extends Analyzer {
     public String stem(String text){
         if(text==null ||text.isEmpty())
             return text;
-        StringBuilder result=new StringBuilder();
+//        StringBuilder result=new StringBuilder();
         Pair<String,String> placeHolder=StemmerHelper.getPlaceHolder(text,protectedTerms);
         System.out.println("Modified text="+text);
-        try{
-            ///token stream take the text(spoken by user)
-            TokenStream tokenStream=tokenStream(null, String.valueOf(new StringBuilder(text)));
-
+        text=placeHolder.getFirst();
+        try( ///token stream take the text(spoken by user)
+             TokenStream tokenStream=tokenStream(null, String.valueOf(new StringBuilder(text)))){
+            StringBuilder result=new StringBuilder();
 
             //this charAttribute(LUCENE)
             //sentence will be broken on the bases of spaces(bcz we hv used whiteSpace tokenizer
@@ -90,6 +90,7 @@ public class MyAnalyzer extends Analyzer {
             if(placeHolder.getSecond()!=null){
                 stemmedText=stemmedText.replace("_PLACEHOLDER_", placeHolder.getSecond());
             }
+            //System.out.println(stemmedText);
             return stemmedText.trim();
         }
         catch (IOException e){
@@ -97,11 +98,11 @@ public class MyAnalyzer extends Analyzer {
         }
        // return result.toString();
     }
-    public static void main(String...args){
-        Set<String> protectedTerm=new HashSet<>();
-        protectedTerm.add("Nikes shoes");
-        MyAnalyzer myAnalyzer=new MyAnalyzer(new HashSet<>(),protectedTerm);
-        String tempVar=myAnalyzer.stem("Nikes shoes for Mens");
-        System.out.println("temp is="+tempVar);
-    }
+//    public static void main(String...args){
+//        Set<String> protectedTerm=new HashSet<>();
+//        protectedTerm.add("Nikes shoes");
+//        MyAnalyzer myAnalyzer=new MyAnalyzer(new HashSet<>(),protectedTerm);
+//        String tempVar=myAnalyzer.stem("Nikes shoes for Mens");
+//        System.out.println("temp is="+tempVar);
+//    }
 }
